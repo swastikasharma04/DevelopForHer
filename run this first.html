@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twilio SMS with Location - Training and Education</title>
+    <style>
+        /* CSS styles for tooltips */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #FFD180; /* Pastel Orange */
+            color: #333;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+
+        /* CSS styles for modals */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(255, 218, 185, 0.8); /* Pastel Peach */
+        }
+
+        .modal-content {
+            background-color: #B39DDB; /* Pastel Purple */
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+            text-align: center; /* Align content to the center */
+        }
+
+        .close {
+            color: #ccc;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Center buttons */
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            margin: 10px; /* Add space between buttons */
+            background-color: #FFAB91; /* Pastel Orange */
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-container button:hover {
+            background-color: #FF8A65; /* Darker Pastel Orange on hover */
+        }
+
+        /* Background color for the entire page */
+        body {
+            background-color: #e7a5af; /* Lighter Pastel Pink */
+            margin: 0; /* Remove default margin */
+            font-family: Arial, sans-serif; /* Choose a suitable font */
+        }
+
+        /* Style for the image */
+        .header-image {
+            width: 400px; /* Adjust width as needed */
+            height: auto; /* Maintain aspect ratio */
+            display: block;
+            margin: 20px auto; /* Center the image */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Image -->
+    <img src="logo.jpeg" alt="Emergency Assistance App" class="header-image">
+
+    <!-- Button container -->
+    <div class="button-container">
+        <!-- Get Started button -->
+        <button onclick="startSetup()">Get Started</button>
+        <!-- Learn More button -->
+        <button onclick="openModal()">Learn More</button>
+    </div>
+
+    <!-- Modal for Training and Education -->
+    <div id="educationModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Emergency Preparedness Training</h2>
+            <p>Welcome to our emergency preparedness training module! Below are some key topics to help you effectively
+                use our app and stay safe during emergencies:</p>
+            <p>
+                Welcome to our emergency assistance app designed to help you during critical situations.
+                Tap the [Get Started] button to begin the setup process.
+                Add trusted contacts who will be notified in case of an emergency.
+                Say the code word "Help" clearly if you need immediate assistance.
+                The app will wait for 6 seconds to confirm your request.
+                If the alert was triggered accidentally, click on "Cancel request” within 6 seconds.
+                The alert will be canceled, and no messages will be sent.
+                Enable location services for accurate location tracking during emergencies.
+                Your location is only shared when an emergency alert is triggered.
+                Our app works offline! If there's no network during an emergency, the app will store your request and
+                send it when the connection is restored.
+                Your privacy is our priority. Your data is encrypted and securely stored.
+                We only access your location and contacts during emergencies.
+            </p>
+            <p>Feel free to explore and learn more about these topics. Remember, being prepared can save lives!</p>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('educationModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('educationModal').style.display = 'none';
+        }
+
+        function startSetup() {
+            window.location.href = "index.html";
+        }
+    </script>
+
+</body>
+
+</html>

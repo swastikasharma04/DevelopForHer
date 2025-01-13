@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Word Setup</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            margin-top: 5px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Code Word Setup</h1>
+        <div class="form-group">
+            <label for="codeWord">Enter Your Code Word:</label>
+            <input type="text" id="codeWord" name="codeWord" placeholder="Enter your code word">
+        </div>
+        <button onclick="saveCodeWord()">Save</button>
+        <p id="message"></p>
+    </div>
+
+    <script>
+        function saveCodeWord() {
+            var codeWord = document.getElementById('codeWord').value.trim();
+
+            // Check if code word meets criteria
+            if (codeWord.length < 4) {
+                setMessage('Code word must be at least 4 characters long.');
+                return;
+            }
+
+            // Save code word to local storage
+            localStorage.setItem('codeWord', codeWord);
+            setMessage('Code word saved successfully.');
+        }
+
+        function setMessage(message) {
+            document.getElementById('message').textContent = message;
+        }
+    </script>
+</body>
+</html>

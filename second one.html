@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twilio SMS with Location</title>
+</head>
+<body>
+
+<script>
+    // Set the Twilio credentials
+    const accountSid = 'ACc5effc37d1540b54f07cebf915e00c78';
+    const authToken = ' bd990259d773cff9700f0ccc30dbf870';
+
+    // Retrieve code word from local storage
+    const codeWord = localStorage.getItem('codeWord');
+
+    // Function to send SMS
+    function sendSMS(latitude, longitude, isCurrentLocation) {
+      // Construct the Twilio API request
+      const message = `🆘EMERGENCY. I NEED HELP https://www.google.com/maps?q=${latitude},${longitude}`;
+
+      if (navigator.onLine) {
+        fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': 'Basic ' + btoa(accountSid + ':' + authToken),
+          },
+          body: new URLSearchParams({
+            From: '+15392455550',
+            Body: message,
+            To: '+919742372771', // Change this to your recipient phone number
+          }),
+        })
+          .then(response => response.json())
+          .then(data => {
+            console.log('Message SID:', data.sid);
+            alert('Message sent successfully!');
+          })
+          .catch(error => {
+            console.error('Error sending message:', error);
+            alert('Error sending message. Please check the console for details.');
+          });
+      } else {
+        // If there is no internet connection, send the most recent location
+        sendMostRecentLocation();
+      }
+    }
+
+    // Record audio and recognize speech
+    const recognizer = new webkitSpeechRecognition();
+    recognizer.continuous = true;
+    recognizer.interimResults = true;
+    recognizer.maxAlternatives = 1; // Set to 1 for better performance
+    recognizer.lang = 'en-US'; // Set to the desired language
+
+    // Adjust the threshold to filter out low-confidence results
+    const confidenceThreshold = 0.5;
+
+    // Flag to track if code word has been recognized
+    let codeWordRecognized = false;
+
+    // Flag to track if the request is canceled
+    let requestCanceled = false;
+
+    recognizer.onresult = function (event) {
+      let finalTranscript = '';
+
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        const transcript = event.results[i][0].transcript;
+        const confidence = event.results[i][0].confidence || 0;
+
+        if (confidence >= confidenceThreshold) {
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          }
+        }
+      }
+
+      console.log('Recognized:', finalTranscript);
+
+      // Check if the recognized text contains the code word
+      if (finalTranscript.toLowerCase().includes(codeWord.toLowerCase()) && !codeWordRecognized) {
+        console.log("Code word detected! Showing cancel button.");
+
+        // Set flag to true to prevent multiple triggers
+        codeWordRecognized = true;
+
+        // Display cancel button
+        document.getElementById('cancelButton').style.display = 'block';
+
+        // Set timeout to automatically send SMS after 7 seconds
+        setTimeout(function () {
+          if (!requestCanceled) {
+            document.getElementById('cancelButton').style.display = 'none'; // Hide cancel button
+            console.log('Sending SMS automatically after 7 seconds.');
+            sendSMSAutomatically();
+          } else {
+            console.log('Request canceled by user.');
+          }
+        }, 7000); // 7 seconds
+      } else if (!codeWordRecognized) {
+        console.log("Code word not detected. Ignoring the input.");
+      }
+    };
+
+    // Start speech recognition when the page loads
+    recognizer.start();
+
+    // Cancel request functionality
+    function cancelRequest() {
+      requestCanceled = true;
+      document.getElementById('cancelButton').style.display = 'none'; // Hide cancel button
+      console.log('Request canceled by user.');
+      alert('Your request has been canceled.');
+    }
+
+    function sendSMSAutomatically() {
+      // Get current location
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          sendSMS(latitude, longitude, true);
+        },
+        error => {
+          console.error('Error getting location:', error);
+          alert('Error getting location. Please check the console for details.');
+        }
+      );
+    }
+</script>
+
+<!-- Cancel Button -->
+<button id="cancelButton" style="display: none;" onclick="cancelRequest()">Cancel Request</button>
+
+</body>
+</html>
